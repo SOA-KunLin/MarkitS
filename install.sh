@@ -29,8 +29,8 @@ echo "📝 Download the pre-built CDK library JAR file..."
 wget https://github.com/cdk/cdk/releases/download/cdk-2.11/cdk-2.11.jar
 
 echo "📝 Download the YOLOv7 model weights..."
-#wget https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/weights.tar.gz
-#tar zxvf weights.tar.gz
+wget https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/weights.tar.gz
+tar zxvf weights.tar.gz
 
 echo "📝 Install MarkitS..."
 sed -i "s|^PROJECT_PATH=.*|PROJECT_PATH=\"$(pwd)\"|" "MarkitS"
