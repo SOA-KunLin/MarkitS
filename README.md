@@ -26,7 +26,7 @@ apt install -y default-jdk
 ## Installation
 1. Run the following command to install the package and its dependencies.
 ```bash
-git clone git@github.com:SOA-KunLin/MarkitS.git
+git clone --recursive git@github.com:SOA-KunLin/MarkitS.git
 cd MarkitS
 chmod +x install.sh
 ./install.sh
