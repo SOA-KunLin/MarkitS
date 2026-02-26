@@ -37,7 +37,7 @@ chmod +x install.sh
 
 ## Usage
 ```bash
-./MarkitS.sh -i <input_folder> -o <output_folder> [--output-intermediate]
+MarkitS -i <input_folder> -o <output_folder> [--output-intermediate]
 ```
 * `<input_folder>` is the path to the folder containing the Markush structure images to be processed.
 * `<output_folder>` is the path where the final output file (`MarkitS.csv`) and all intermediate files are stored.
@@ -46,8 +46,8 @@ chmod +x install.sh
 ## Experiments
 The commands below reproduce MarkitS’s results for the statistics shown in the manuscript tables.
 ```bash
-./MarkitS.sh -i development -o development_MarkitS
-./MarkitS.sh -i validation -o validation_MarkitS
-./MarkitS.sh -i testing -o testing_MarkitS
+MarkitS -i datasets/development -o development_MarkitS
+MarkitS -i datasets/validation -o validation_MarkitS
+MarkitS -i datasets/testing -o testing_MarkitS
 ```
 The resulting SMILES are saved in `development_MarkitS/MarkitS.csv`, `validation_MarkitS/MarkitS.csv`, and `testing_MarkitS/MarkitS.csv`, respectively.

@@ -37,7 +37,7 @@ sed -i "s|^PROJECT_PATH=.*|PROJECT_PATH=\"$(pwd)\"|" "MarkitS"
 chmod +x MarkitS
 
 echo "📝 Download Markush image datasets..."
-#wget https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/datasets.tar.gz
-#tar zxvf datasets.tar.gz
+wget https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/datasets.tar.gz
+tar zxvf datasets.tar.gz
 
 echo "Installation complete."
