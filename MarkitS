@@ -1,0 +1,130 @@
+#!/bin/bash
+set -e
+
+input=""
+output=""
+output_intermediate=false
+
+OPTIONS=$(getopt -o i:o: --long input:,output:,output-intermediate -- "$@")
+if [ $? -ne 0 ]; then
+    echo "Incorrect options provided"
+    exit 1
+fi
+
+eval set -- "$OPTIONS"
+
+while true; do
+  case "$1" in
+    -i|--input)
+      input="$2"
+      shift 2
+      ;;
+    -o|--output)
+      output="$2"
+      shift 2
+      ;;
+    --output-intermediate)
+      output_intermediate=true
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Invalid option: $1"
+      exit 1
+      ;;
+  esac
+done
+
+# Check if required values were provided
+if [[ -z "$input" || -z "$output" ]]; then
+    echo "Usage: $0 -i <input_file> -o <output_file>"
+    #echo "Usage: $0 -i <input_file> -o <output_file> [--output-intermediate]"
+    exit 1
+fi
+
+
+PROJECT_PATH="/workspace/MarkitS"
+YOLO_PATH="${PROJECT_PATH}/yolov7"
+WEIGHTS_PATH="${PROJECT_PATH}/weights"
+CURRENT_PATH="$(pwd)"
+FINAL_FILE="MarkitS.csv"
+
+
+if [ ! -d "$input" ]; then
+    echo "Error: '$input' not found."
+    exit 1
+fi
+cd $input
+DATA_DIR="$(pwd)"
+cd $CURRENT_PATH
+
+
+if [ -d "$output" ]; then
+    echo "Error: Folder '$output' already exists."
+    exit 1
+fi
+mkdir -p "$output"
+cd "$output"
+OUTPUT_PATH="$(pwd)"
+
+
+echo "Input directory: ${DATA_DIR}"
+echo "Output directory: ${OUTPUT_PATH}"
+
+
+echo "===== yolo ====="
+[ -L yolov7_circle_210sample_ep200.pt ] && rm yolov7_circle_210sample_ep200.pt
+ln -s "$WEIGHTS_PATH"/yolov7_circle_210sample_ep200.pt yolov7_circle_210sample_ep200.pt
+"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_circle_210sample_ep200.pt --source "$DATA_DIR"/ --classes 0 --save-txt --project "$OUTPUT_PATH"/ --name exp_circle --exist-ok --conf-thres 0.93
+rm yolov7_circle_210sample_ep200.pt
+
+
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_circle_blank.py "$DATA_DIR"
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/line_detection.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/cp_circle_img.py "$DATA_DIR"
+
+
+echo "===== yolo ====="
+[ -L yolov7_r_png_545sample_ep200.pt ] && rm yolov7_r_png_545sample_ep200.pt
+ln -s "$WEIGHTS_PATH"/yolov7_R_png_545sample_ep200.pt yolov7_r_png_545sample_ep200.pt
+"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_r_png_545sample_ep200.pt --source "$DATA_DIR"/ --classes 0 1 2 3 5 6 7 8 13 14 16 --save-txt --project "$OUTPUT_PATH"/ --name exp_200 --exist-ok --conf-thres 0.69
+rm yolov7_r_png_545sample_ep200.pt
+
+
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/R_image.py "$DATA_DIR"
+PYTHONPATH="$PROJECT_PATH:$PROJECT_PATH/TexTeller/src/:$PYTHONPATH" "$PROJECT_PATH"/.venv_texteller/bin/python "$PROJECT_PATH"/latex_R.py "$OUTPUT_PATH"
+
+
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:=0}" "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/predict_SMILES_orig.py "$DATA_DIR" SMILES_orig.csv
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/ion_list.py
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:=0}" "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/modify_yolo_label_ion.py "$DATA_DIR"
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_list.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_R.py "$DATA_DIR"
+CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:=0}" "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/predict_SMILES_R.py output_replaceR/
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_numstar.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/differ_SMILES_concate.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_replace_1.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_generate.py
+
+
+echo "===== yolo ====="
+[ -L yolov7_r_generate_606sample_ep200.pt ] && rm yolov7_r_generate_606sample_ep200.pt
+ln -s "$WEIGHTS_PATH"/yolov7_R_generate_606sample_ep200.pt yolov7_r_generate_606sample_ep200.pt
+"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_r_generate_606sample_ep200.pt --source "$OUTPUT_PATH"/generate_smiles/ --classes 0 1 2 3 5 6 7 8 13 14 16 --save-txt --project "$OUTPUT_PATH"/ --name exp_gen --exist-ok  --conf-thres 0.72
+rm yolov7_r_generate_606sample_ep200.pt
+
+
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/cut_R_image_gen.py
+PYTHONPATH="$PROJECT_PATH:$PROJECT_PATH/TexTeller/src/:$PYTHONPATH" "$PROJECT_PATH"/.venv_texteller/bin/python "$PROJECT_PATH"/latex_R_gen.py "$OUTPUT_PATH"
+
+
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/count_R_dist_ver3.py
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/dist_neighbor.py "01"
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/test4.py "01" "$FINAL_FILE"
+
+
+echo "Final SMILES saved to $FINAL_FILE."
+echo "MarkitS run completed successfully."

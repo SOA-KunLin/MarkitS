@@ -1,0 +1,7 @@
+[submodule "yolov7"]
+	path = yolov7
+	url = https://github.com/WongKinYiu/yolov7.git
+[submodule "TexTeller"]
+	path = TexTeller
+	url = https://github.com/OleehyO/TexTeller.git
+	branch = prev

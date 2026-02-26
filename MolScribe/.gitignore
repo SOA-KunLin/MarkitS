@@ -1,0 +1,12 @@
+**/.ipynb_checkpoints/
+data/
+output/
+notebook/
+scripts/
+*.log
+**/__pycache__
+*.csv
+tmp/
+**/checkpoints/
+*.png
+**/.DS_Store
