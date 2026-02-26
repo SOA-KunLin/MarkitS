@@ -46,7 +46,7 @@ if [[ -z "$input" || -z "$output" ]]; then
 fi
 
 
-PROJECT_PATH="/workspace/MarkitS"
+PROJECT_PATH="/workspace2/model/MarkitS"
 YOLO_PATH="${PROJECT_PATH}/yolov7"
 WEIGHTS_PATH="${PROJECT_PATH}/weights"
 CURRENT_PATH="$(pwd)"
