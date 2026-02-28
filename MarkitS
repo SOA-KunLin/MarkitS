@@ -104,26 +104,40 @@ CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:=0}" "$PROJECT_PATH"/.venv_molscrib
 "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_list.py
 "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_R.py "$DATA_DIR"
 CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:=0}" "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/predict_SMILES_R.py output_replaceR/
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_numstar.py
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/differ_SMILES_concate.py
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_replace_1.py
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_generate.py
+
+DIR="output_replaceR"
+if [ -d "$DIR" ] && [ "$(find "$DIR" -mindepth 1 -print -quit)" ]; then
+	
+	"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/replace_numstar.py
+	"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/differ_SMILES_concate.py
+	"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_replace_1.py
+	"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/SMILES_generate.py
+	
+	DIR_GEN="generate_smiles"
+	if [ -d "$DIR_GEN" ] && [ "$(find "$DIR_GEN" -mindepth 1 -print -quit)" ]; then
+		
+		echo "===== yolo ====="
+		[ -L yolov7_r_generate_606sample_ep200.pt ] && rm yolov7_r_generate_606sample_ep200.pt
+		ln -s "$WEIGHTS_PATH"/yolov7_R_generate_606sample_ep200.pt yolov7_r_generate_606sample_ep200.pt
+		"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_r_generate_606sample_ep200.pt --source "$OUTPUT_PATH"/generate_smiles/ --classes 0 1 2 3 5 6 7 8 13 14 16 --save-txt --project "$OUTPUT_PATH"/ --name exp_gen --exist-ok  --conf-thres 0.72
+		rm yolov7_r_generate_606sample_ep200.pt
 
 
-echo "===== yolo ====="
-[ -L yolov7_r_generate_606sample_ep200.pt ] && rm yolov7_r_generate_606sample_ep200.pt
-ln -s "$WEIGHTS_PATH"/yolov7_R_generate_606sample_ep200.pt yolov7_r_generate_606sample_ep200.pt
-"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_r_generate_606sample_ep200.pt --source "$OUTPUT_PATH"/generate_smiles/ --classes 0 1 2 3 5 6 7 8 13 14 16 --save-txt --project "$OUTPUT_PATH"/ --name exp_gen --exist-ok  --conf-thres 0.72
-rm yolov7_r_generate_606sample_ep200.pt
+		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/cut_R_image_gen.py
+		PYTHONPATH="$PROJECT_PATH:$PROJECT_PATH/TexTeller/src/:$PYTHONPATH" "$PROJECT_PATH"/.venv_texteller/bin/python "$PROJECT_PATH"/latex_R_gen.py "$OUTPUT_PATH"
 
 
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/cut_R_image_gen.py
-PYTHONPATH="$PROJECT_PATH:$PROJECT_PATH/TexTeller/src/:$PYTHONPATH" "$PROJECT_PATH"/.venv_texteller/bin/python "$PROJECT_PATH"/latex_R_gen.py "$OUTPUT_PATH"
+		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/count_R_dist_ver3.py
+		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/dist_neighbor.py "01"
+		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/test4.py "01" "$FINAL_FILE"
 
+	else
+		cat SMILES_first.csv SMILES_ver3.csv > "$FINAL_FILE"
+	fi
 
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/count_R_dist_ver3.py
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/dist_neighbor.py "01"
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/test4.py "01" "$FINAL_FILE"
+else
+	cp SMILES_first.csv "$FINAL_FILE"
+fi
 
 
 echo "Final SMILES saved to $FINAL_FILE."
