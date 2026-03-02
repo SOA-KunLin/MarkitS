@@ -129,7 +129,7 @@ if [ -d "$DIR" ] && [ "$(find "$DIR" -mindepth 1 -print -quit)" ]; then
 
 		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/count_R_dist_ver3.py
 		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/dist_neighbor.py "01"
-		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/test4.py "01" "$FINAL_FILE"
+		"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/markitS_intermediate.py "01" "$FINAL_FILE" output_intermediate
 
 	else
 		cat SMILES_first.csv SMILES_ver3.csv > "$FINAL_FILE"
