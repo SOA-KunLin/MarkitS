@@ -4,7 +4,6 @@ import pandas as pd
 import sys
 
 output_intermediate = sys.argv[3]
-project_path = sys.argv[4]
 
 with open('SMILES_dist_near' + sys.argv[1] + '.csv', 'r', encoding='utf-8') as file:
     data = list(csv.reader(file, delimiter="," ))
@@ -21,13 +20,13 @@ def load_to_dict(filepath):
         return {row[0]: row[1] for row in reader if row}
 
 if output_intermediate:
-    dict_first = load_to_dict(project_path + '/SMILES_first.csv')
-    dict_ver1  = load_to_dict(project_path + '/SMILES_ver1.csv')
-    dict_ver3  = load_to_dict(project_path + '/SMILES_ver3.csv')
+    dict_first = load_to_dict('SMILES_first.csv')
+    dict_ver1  = load_to_dict('SMILES_ver1.csv')
+    dict_ver3  = load_to_dict('SMILES_ver3.csv')
     dict_final = {d[0]: d[1] for d in list_output if d}
 
     # 2. 讀取原始資料並直接合併
-    with open(project_path + '/SMILES_orig.csv', 'r', encoding='utf-8') as f:
+    with open('SMILES_orig.csv', 'r', encoding='utf-8') as f:
         data_orig = list(csv.reader(f))
 
     for row in data_orig:
