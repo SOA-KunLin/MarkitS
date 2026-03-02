@@ -15,7 +15,7 @@ uv venv .venv_texteller --python 3.10
 uv pip install --python .venv_texteller/bin/python \
 torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 \
 --index-url https://download.pytorch.org/whl/cu118
-uv pip install --python .venv_texteller/bin/python ./TexTeller
+uv pip install --python .venv_texteller/bin/python texteller==1.0.2 augraphy==8.2.6
 
 echo "📝 Setting up MolScribe environment..."
 uv venv .venv_molscribe --python 3.10
