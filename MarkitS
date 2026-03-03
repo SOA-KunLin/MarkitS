@@ -125,9 +125,16 @@ fi
 
 DIR_GEN="generate_smiles"
 if [ ! -d "$DIR_GEN" ] || [ -z "$(find "$DIR_GEN" -mindepth 1 -print -quit)" ]; then
-    "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/markitS_intermediate_no_gen.py "$FINAL_FILE" output_intermediate
+    "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/markitS_intermediate_no_gen.py "$FINAL_FILE" "$output_intermediate"
     markits_complete
 fi
+
+echo "===== yolo ====="
+[ -L yolov7_r_generate_606sample_ep200.pt ] && rm yolov7_r_generate_606sample_ep200.pt
+ln -s "$WEIGHTS_PATH"/yolov7_R_generate_606sample_ep200.pt yolov7_r_generate_606sample_ep200.pt
+"$PROJECT_PATH"/.venv_yolo/bin/python "$YOLO_PATH"/detect.py --weights yolov7_r_generate_606sample_ep200.pt --source "$OUTPUT_PATH"/generate_smiles/ --classes 0 1 2 3 5 6 7 8 13 14 16 --save-txt --project "$OUTPUT_PATH"/ --name exp_gen --exist-ok  --conf-thres 0.72
+rm yolov7_r_generate_606sample_ep200.pt
+
 
 
 "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/cut_R_image_gen.py
@@ -136,7 +143,7 @@ PYTHONPATH="$PROJECT_PATH:$PROJECT_PATH/TexTeller/src/:$PYTHONPATH" "$PROJECT_PA
 
 "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/count_R_dist_ver3.py
 "$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/dist_neighbor.py "01"
-"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/markitS_intermediate.py "01" "$FINAL_FILE" output_intermediate
+"$PROJECT_PATH"/.venv_molscribe/bin/python "$PROJECT_PATH"/markitS_intermediate.py "01" "$FINAL_FILE" "$output_intermediate"
 
 
 

@@ -42,7 +42,7 @@ for filename, smiles in data1:
 
     if len(re.findall(r'\*',smiles)) == 1: #only one * in SMILES
 
-        smiles_R = re.findall('\[[AEGLMQORXYZa-z0-9]+[a-zA-Z]*\]', smiles)
+        smiles_R = re.findall('\[[AEGLMQORXYZa-z0-9]+[a-zA-GI-Z]*\]', smiles)
         for k in range(len(smiles_R)):
             smiles_R[k] = re.sub(r'\[[ON]R(\d+)\]|\[CO2R(\d+)\]|\[NR(\d+)\]', lambda m: f'[R{m.group(1) or m.group(2)}]', smiles_R[k])
             smiles_R[k] = re.sub(r'\[([xyz])\]',lambda m: f'[{m.group(1).upper()}]', smiles_R[k])

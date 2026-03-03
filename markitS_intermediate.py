@@ -11,7 +11,10 @@ with open('SMILES_dist_near' + sys.argv[1] + '.csv', 'r', encoding='utf-8') as f
 list_output = []
 for i in range(len(data)):
     data[i][2] = data[i][2].replace('_2','')
-    list_output.append([data[i][0], data[i][2]])
+    if data[i][2] == " ":
+        list_output.append([data[i][0], data[i][1]])
+    else:
+        list_output.append([data[i][0], data[i][2]])
 
 def load_to_dict(filepath):
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -19,7 +22,7 @@ def load_to_dict(filepath):
         # 建立字典 {ID: Value}
         return {row[0]: row[1] for row in reader if row}
 
-if output_intermediate:
+if output_intermediate == "true":
     dict_first = load_to_dict('SMILES_first.csv')
     dict_ver1  = load_to_dict('SMILES_ver1.csv')
     dict_ver3  = load_to_dict('SMILES_ver3.csv')
@@ -44,14 +47,17 @@ if output_intermediate:
             row.append("")
         if dict_final.get(row_id):
             row.append(dict_final.get(row_id))
+            row.append(dict_final.get(row_id))
+
 
     df = pd.DataFrame(data_orig)
-    df.to_csv(sys.argv[2], encoding='utf-8', index=False, header=['filename', 'orig_smiles', 'yolo', 'V', 'final'])
+    df.to_csv(sys.argv[2], encoding='utf-8', index=False, header=['Filename', 'MolScribe_decoder_output', 'After_Module_1_processing', 'After_Module_2_processing', 'After_Module_3_processing','Final'])
+
 
 else:
 
     df = pd.DataFrame(list_output)
-    df.to_csv(sys.argv[2], encoding='utf-8', index=False, header=['filename', 'SMILES'])
+    df.to_csv(sys.argv[2], encoding='utf-8', index=False, header=['Filename', 'SMILES'])
 
 
 

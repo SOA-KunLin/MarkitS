@@ -25,7 +25,7 @@ def latex_filter(text):
     text = re.sub(r'\^\{\\mathbb\{s\}\}', '', text)
     text = re.sub(r'\{', '', text)
     text = re.sub(r'\}', '', text)
-    text = re.sub(r'\\operatorname|\\bullet|\\circ|\\ast|\\smallsetminus|\\setminus|\\backslash|\\Lambda|\\left|\\right|\\acute|\\grave|\\tilde|\\hat|\\bar|\\widetilde|\\backsim|\\swarrow|\\bigrfloorn|\\angle|\\diagup', '', text)
+    text = re.sub(r'\\operatorname|\\bullet|\\widehat|\\circ|\\ast|\\smallsetminus|\\setminus|\\backslash|\\Lambda|\\left|\\right|\\acute|\\grave|\\tilde|\\hat|\\bar|\\widetilde|\\backsim|\\swarrow|\\bigrfloorn|\\angle|\\diagup', '', text)
     text = re.sub(r'\\tiny|\\scriptsize|\\footnotesize|\\small|\\normalsize|\\large|\\Large|\\LARGE|\\huge|\\Huge|\\sqrt|\\overline','', text)
     text = re.sub(r'\\textbf|\\textit|\\texttt|\\textsc|\\text|\\underline|\\cdot|\\dot|\\sim|\\prime|\\bm|\\frac|\\boldsymbol|\\nu|\\rm|\\bf|\\xi', '', text)
     text = re.sub(r'(\\mathrm|\\mathbf|\\mathit|\\mathsf|\\mathtt|\\mathbb|\\mathcal)','',text)
@@ -37,6 +37,7 @@ def latex_filter(text):
     text = re.sub(r'Upsilon', 'Y', text)
     text = re.sub(r'Rtimes', 'Rx', text)
     text = re.sub(r'Rg', 'R9', text)
+    text = re.sub(r'sigma', '6', text)
     return text
 
 

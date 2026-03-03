@@ -17,7 +17,7 @@ dict_ver3  = load_to_dict('SMILES_ver3.csv')
 with open('SMILES_orig.csv', 'r', encoding='utf-8') as f:
     data_orig = list(csv.reader(f))
 
-if output_intermediate:
+if output_intermediate == "true":
     dict_ver1  = load_to_dict('SMILES_ver1.csv')
 
     for row in data_orig:
@@ -31,9 +31,15 @@ if output_intermediate:
             row.append("")
         if dict_ver3.get(row_id):
             row.append(dict_ver3.get(row_id))
+            row.append(dict_ver3.get(row_id))
+        if len(row) < 4:
+            row.append("")
+            row.append(row[1])
+
+
 
     df = pd.DataFrame(data_orig)
-    df.to_csv(sys.argv[1], encoding='utf-8', index=False, header=['filename', 'orig_smiles', 'yolo', 'V/final'])
+    df.to_csv(sys.argv[1], encoding='utf-8', index=False, header=['Filename', 'MolScribe_decoder_output', 'After_Module_1_processing', 'After_Module_2_processing', 'Final'])
 
 else:
     output = []
@@ -44,6 +50,9 @@ else:
             output.append(dict_first.get(row_id))
         if dict_ver3.get(row_id):
             output.append(dict_ver3.get(row_id))
+        if len(output) < 2:
+            output.append(row[1])
+
 
     df = pd.DataFrame(output)
     df.to_csv(sys.argv[1], encoding='utf-8', index=False, header=False)

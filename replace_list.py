@@ -11,7 +11,7 @@ with open('./R_label_latex_ver2.txt' ,'r', encoding='utf-8') as f: #yolo R
     lines = f.readlines()
 
 def count_mol_R(file_name, smiles): #Check if the number of '*' in SMILES and the number of yolo R are the same.
-    count_mol_R = smiles.count('*') + len(re.findall(r'\[[AEGLMQRXYZa-z0-9\(\)]+[a-zA-Z]*\]|\[OR\d+\]|\[NR\d+\]|\[CO2R\d+\]|\[NHR\d+\]|\[R[A-Za-z0-9]*O\]', smiles)) - len(re.findall(r'\[[w]\]', smiles))
+    count_mol_R = smiles.count('*') + len(re.findall(r'\[[AEGLMQRXYZa-z0-9\(\)]+[a-zA-GI-Z]*\]|\[OR\d+\]|\[NR\d+\]|\[CO2R\d+\]|\[NHR\d+\]|\[R[A-Za-z0-9]*O\]', smiles)) - len(re.findall(r'\[[w]\]', smiles))
 
     count_yolo_R = 0 # number of yolo R
     for k in lines:
@@ -24,7 +24,7 @@ def count_mol_R(file_name, smiles): #Check if the number of '*' in SMILES and th
 def mol_num(file_name, smiles):
     
     res_star = re.findall(r'\[\d+\*\]', smiles) #list of the [digit]* and [XYZ...] in the SMILES    
-    res_xyz = re.findall(r'\[[AEGLMQRXYZa-z0-9\(\)]+[a-zA-Z]*\]|\[OR\d+\]|\[NR\d+\]|\[NHR\d+\]|\[CO2R\d+\]', smiles) 
+    res_xyz = re.findall(r'\[[AEGLMQRXYZa-z0-9\(\)]+[a-zA-GI-Z]*\]|\[OR\d+\]|\[NR\d+\]|\[NHR\d+\]|\[CO2R\d+\]', smiles) 
     res_w = re.findall(r'\[[w]\]', smiles)
 
     #count_yolo = sum(1 for k in lines if k.split()[0].split('_')[0] == file_name)# the number of yolo
