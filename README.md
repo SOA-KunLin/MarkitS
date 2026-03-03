@@ -46,8 +46,8 @@ MarkitS -i <input_folder> -o <output_folder> [--output-intermediate]
 ## Experiments
 The commands below reproduce MarkitS’s results for the statistics shown in the manuscript tables.
 ```bash
-MarkitS -i datasets/development -o development_MarkitS
-MarkitS -i datasets/validation -o validation_MarkitS
-MarkitS -i datasets/testing -o testing_MarkitS
+MarkitS -i datasets/development -o development_MarkitS --output-intermediate
+MarkitS -i datasets/validation -o validation_MarkitS --output-intermediate
+MarkitS -i datasets/testing -o testing_MarkitS --output-intermediate
 ```
 The resulting SMILES are saved in `development_MarkitS/MarkitS.csv`, `validation_MarkitS/MarkitS.csv`, and `testing_MarkitS/MarkitS.csv`, respectively.
