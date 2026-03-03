@@ -25,7 +25,7 @@ def latex_filter(text):
     text = re.sub(r'\^\{\\mathbb\{s\}\}|\\textbf\{\-\}|\\text\{一\}', '', text)
     text = re.sub(r'\{', '', text)
     text = re.sub(r'\}', '', text)
-    text = re.sub(r'\\operatorname\*|\\bullet|\\centerdot|\\circ|\\ast|\\smallsetminus|\\setminus|\\backslash|\\Lambda|\\left|\\right|\\acute|\\grave|\\tilde|\\hat|\\bar|\\widetilde|\\backsim|\\swarrow|\\bigrfloorn|\\angle|\\diagup', '', text)
+    text = re.sub(r'\\operatorname\*|\\bullet|\\centerdot|\\widehat|\\circ|\\ast|\\smallsetminus|\\setminus|\\backslash|\\Lambda|\\left|\\right|\\acute|\\grave|\\tilde|\\hat|\\bar|\\widetilde|\\backsim|\\swarrow|\\bigrfloorn|\\angle|\\diagup', '', text)
     text = re.sub(r'\\tiny|\\scriptsize|\\footnotesize|\\small|\\normalsize|\\large|\\Large|\\LARGE|\\huge|\\Huge|\\rule|\\kappa','', text)
     text = re.sub(r'\\textbf|\\textit|\\texttt|\\textsc|\\text|\\vrule|\\underline|\\cdot|\\dot|\\sim|\\prime|\\bmv|\\bm|\\frac|\\boldsymbol|\\nu|\\rm|\\bf|\\xi', '', text)
     text = re.sub(r'(\\mathrm|\\mathbf|\\mathit|\\mathsf|\\mathtt|\\mathbb|\\mathcal|\\sf|\\theta)','',text)
