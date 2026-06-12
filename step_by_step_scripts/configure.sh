@@ -1,5 +1,4 @@
-#PROJECT_PATH="/workspace2/model/MarkitS_"
-PROJECT_PATH="/workspace/MarkitS_test/MarkitS"
+PROJECT_PATH="/workspace2/model/MarkitS_"
 YOLO_PATH="${PROJECT_PATH}/yolov7"
 WEIGHTS_PATH="${PROJECT_PATH}/weights"
 export PYTHONPATH="${PROJECT_PATH}/TexTeller/src"
