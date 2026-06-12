@@ -12,12 +12,17 @@ apt install -y python3 python3-pip python3-venv
 ```bash
 pip install uv
 ```
-3. Install the Cairo Graphics Library (System-level dependencies required by CairoSVG)
+3. Install the OpenCV dependency
+```bash
+apt update
+apt install -y libgl1-mesa-glx libglib2.0-0
+```
+4. Install the Cairo Graphics Library (System-level dependencies required by CairoSVG)
 ```bash
 apt update
 apt install -y libcairo2-dev libffi-dev python3-dev
 ```
-4. Install Java
+5. Install Java
 ```bash
 apt update
 apt install -y default-jdk
@@ -32,7 +37,10 @@ chmod +x install.sh
 ./install.sh
 ```
 > [!NOTE]
-> The `install.sh` script uses the CUDA 11.8 runtime. You can modify it to work with other CUDA runtime versions.
+> The `install.sh` script uses the CUDA 11.8 runtime.
+
+> [!TIP]
+> MarkitS can also be run with Docker. Refer to [Run MarkitS with docker](#docker) for setup and usage instructions.
 
 
 ## Usage
@@ -51,3 +59,28 @@ MarkitS -i datasets/validation -o validation_MarkitS --output-intermediate
 MarkitS -i datasets/testing -o testing_MarkitS --output-intermediate
 ```
 The resulting SMILES are saved in `development_MarkitS/MarkitS.csv`, `validation_MarkitS/MarkitS.csv`, and `testing_MarkitS/MarkitS.csv`, respectively.
+
+## Docker
+You can build a Docker image for MarkitS:
+```bash
+docker build . -t markits
+```
+Or pull a pre-built image from [Docker Hub](https://hub.docker.com/r/soakunlin/markits).
+
+To use MarkitS with Docker, run the following command:
+```bash
+docker run --rm --gpus all -v "$(pwd):/workspace" \
+   markits MarkitS -i <input_folder> -o <output_folder> --output-intermediate
+```
+> [!NOTE]
+> The above command assumes that `<input_folder>` is located in the current working directory. The `<output_folder>` directory will be created in the same location.
+
+To reproduce MarkitS’s results for the statistics shown in the manuscript tables, use the following commands:
+```bash
+docker run --rm --gpus all -v "$(pwd):/workspace" markits \
+   MarkitS -i /MarkitS/datasets/development -o development_MarkitS --output-intermediate
+docker run --rm --gpus all -v "$(pwd):/workspace" markits \
+   MarkitS -i /MarkitS/datasets/validation -o validation_MarkitS --output-intermediate
+docker run --rm --gpus all -v "$(pwd):/workspace" markits \
+   MarkitS -i /MarkitS/datasets/testing -o testing_MarkitS --output-intermediate
+```

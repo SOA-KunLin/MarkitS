@@ -40,8 +40,7 @@ done
 
 # Check if required values were provided
 if [[ -z "$input" || -z "$output" ]]; then
-    echo "Usage: $0 -i <input_file> -o <output_file>"
-    #echo "Usage: $0 -i <input_file> -o <output_file> [--output-intermediate]"
+    echo "Usage: $0 -i <input_file> -o <output_file> [--output-intermediate]"
     exit 1
 fi
 

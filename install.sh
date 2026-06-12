@@ -34,7 +34,10 @@ tar zxvf weights.tar.gz
 
 echo "📝 Install MarkitS..."
 sed -i "s|^PROJECT_PATH=.*|PROJECT_PATH=\"$(pwd)\"|" "MarkitS"
+#PROJECT_PATH="/workspace2/model/MarkitS_"
 chmod +x MarkitS
+sed -i "s|^PROJECT_PATH=.*|PROJECT_PATH=\"$(pwd)\"|" "step_by_step_scripts/configure.sh"
+chmod +x step_by_step_scripts/*
 
 echo "📝 Download Markush image datasets..."
 wget https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/datasets.tar.gz
