@@ -77,10 +77,10 @@ docker run --rm --gpus all -v "$(pwd):/workspace" \
 
 To reproduce MarkitS’s results for the statistics shown in the manuscript tables, use the following commands:
 ```bash
-docker run --rm --gpus all -v "$(pwd):/workspace" markits \
-   MarkitS -i /MarkitS/datasets/development -o development_MarkitS --output-intermediate
-docker run --rm --gpus all -v "$(pwd):/workspace" markits \
-   MarkitS -i /MarkitS/datasets/validation -o validation_MarkitS --output-intermediate
-docker run --rm --gpus all -v "$(pwd):/workspace" markits \
-   MarkitS -i /MarkitS/datasets/testing -o testing_MarkitS --output-intermediate
+docker run --rm --gpus all -v "$(pwd):/workspace" \
+   markits MarkitS -i /MarkitS/datasets/development -o development_MarkitS --output-intermediate
+docker run --rm --gpus all -v "$(pwd):/workspace" \
+   markits MarkitS -i /MarkitS/datasets/validation -o validation_MarkitS --output-intermediate
+docker run --rm --gpus all -v "$(pwd):/workspace" \
+   markits MarkitS -i /MarkitS/datasets/testing -o testing_MarkitS --output-intermediate
 ```
