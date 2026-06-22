@@ -81,6 +81,10 @@ markits_complete() {
 }
 
 
+cp -r "$DATA_DIR" "$OUTPUT_PATH/inputs"
+DATA_DIR="$OUTPUT_PATH/inputs"
+
+
 echo "===== yolo ====="
 [ -L yolov7_circle_210sample_ep200.pt ] && rm yolov7_circle_210sample_ep200.pt
 ln -s "$WEIGHTS_PATH"/yolov7_circle_210sample_ep200.pt yolov7_circle_210sample_ep200.pt
