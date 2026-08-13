@@ -65,6 +65,8 @@ We provide a pre-built Docker image on [Docker Hub](https://hub.docker.com/r/soa
 ```bash
 MarkitS -i <input_folder> -o <output_folder> --docker [--output-intermediate]
 ```
+> [!NOTE]
+> To reproduce MarkitS’s results, [download the Markush image datasets](https://github.com/SOA-KunLin/MarkitS/releases/download/v0.1/datasets.tar.gz) and extract its contents. Then follow a similar procedure as described in the [Experiments](#experiments) section.
 
 You can also build the MarkitS Docker image from the source code:
 ```bash
