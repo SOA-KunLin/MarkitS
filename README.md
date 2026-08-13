@@ -61,13 +61,17 @@ MarkitS -i datasets/testing -o testing_MarkitS --output-intermediate
 The resulting SMILES are saved in `development_MarkitS/MarkitS.csv`, `validation_MarkitS/MarkitS.csv`, and `testing_MarkitS/MarkitS.csv`, respectively.
 
 ## Docker
-You can build a Docker image for MarkitS:
+We provide a pre-built Docker image on [Docker Hub](https://hub.docker.com/r/soakunlin/markits) that you can either pull directly or run with `MarkitS`:
+```bash
+MarkitS -i <input_folder> -o <output_folder> --docker [--output-intermediate]
+```
+
+You can also build the MarkitS Docker image from the source code:
 ```bash
 docker build . -t markits
 ```
-Or pull a pre-built image from [Docker Hub](https://hub.docker.com/r/soakunlin/markits).
 
-To use MarkitS with Docker, run the following command:
+To run the built Docker image, use the following command:
 ```bash
 docker run --rm --gpus all -v "$(pwd):/workspace" \
    markits MarkitS -i <input_folder> -o <output_folder> --output-intermediate

@@ -4,8 +4,31 @@ set -e
 input=""
 output=""
 output_intermediate=false
+usedocker=false
+imagetag="soakunlin/markits"
+dockeropt=""
 
-OPTIONS=$(getopt -o i:o: --long input:,output:,output-intermediate -- "$@")
+show_help() {
+    echo "Usage: $(basename "$0") -i <input> -o <output> [OPTIONS]"
+    echo ""
+    echo "Required Arguments:"
+    echo "  -i, --input <path>            Path to the input file/directory."
+    echo "  -o, --output <path>           Path to the output file/directory."
+    echo ""
+    echo "Optional Arguments:"
+    echo "      --output-intermediate     Enable saving of intermediate outputs."
+    echo "  -h, --help                    Show this help message and exit."
+    echo ""
+    echo "Docker Mode Options:"
+    echo "      --docker                  Enable Docker execution mode."
+    echo "                                Note: When enabled, -i and -o MUST be relative paths"
+    echo "                                starting from the current working directory."
+    echo "      --img-tag <tag>           Specify a custom Docker image tag (Default: abc)."
+    echo "      --docker-opt <options>    Pass additional runtime flags directly to 'docker run'."
+    echo "                                Enclose multiple options in quotes."
+}
+
+OPTIONS=$(getopt -o i:o:h --long input:,output:,output-intermediate,docker,img-tag:,docker-opt:,help -- "$@")
 if [ $? -ne 0 ]; then
     echo "Incorrect options provided"
     exit 1
@@ -15,6 +38,10 @@ eval set -- "$OPTIONS"
 
 while true; do
   case "$1" in
+    -h|--help)
+      show_help
+      exit 0
+      ;;
     -i|--input)
       input="$2"
       shift 2
@@ -26,6 +53,18 @@ while true; do
     --output-intermediate)
       output_intermediate=true
       shift
+      ;;
+    --docker)
+      usedocker=true
+      shift 1
+      ;;
+    --img-tag)
+      imagetag="$2"
+      shift 2
+      ;;
+    --docker-opt)
+      dockeropt="$2"
+      shift 2
       ;;
     --)
       shift
@@ -40,8 +79,34 @@ done
 
 # Check if required values were provided
 if [[ -z "$input" || -z "$output" ]]; then
-    echo "Usage: $0 -i <input_file> -o <output_file> [--output-intermediate]"
+    show_help
     exit 1
+fi
+
+
+if [ "$usedocker" = true ]; then
+
+    if [[ "$input" == /* || "$input" == ../* || "$input" == ".." ]]; then
+        echo "Error: In Docker mode, -i ($input) must be a relative path starting from the current directory. Absolute paths or parent directory paths (../) are not allowed!"
+        exit 1
+    fi
+
+    if [[ "$output" == /* || "$output" == ../* || "$output" == ".." ]]; then
+        echo "Error: In Docker mode, -o ($output) must be a relative path starting from the current directory. Absolute paths or parent directory paths (../) are not allowed!"
+        exit 1
+    fi
+
+
+    if [ "$output_intermediate" = true ]; then
+      EXTRA_OPT="--output-intermediate"
+    else
+      EXTRA_OPT=""
+    fi
+    docker run --rm --gpus all -v "$(pwd):/workspace" $dockeropt \
+      $imagetag MarkitS -i $input -o $output $EXTRA_OPT || exit 1
+
+    exit 0
+
 fi
 
 
